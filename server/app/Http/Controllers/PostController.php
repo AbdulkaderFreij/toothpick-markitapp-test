@@ -23,8 +23,12 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required',
             'body'=> 'required',
+            'user_id' => 'required'
         ]);
         $inputs = $request->toArray();
+        if($inputs['user_id'] != auth()->user()->id){
+            return response()->json(['message'=>'wrong user']);
+        }
         $inputs['user_id'] = auth()->user()->id;
         $post = Post::create($inputs);
         return response()->json(['message'=> 'post created',
@@ -44,8 +48,13 @@ class PostController extends Controller
             'body' => 'required',
             'user_id' => 'required'
         ]);
-        $post = Post::where('id', '=', $id)->first();
-       $post->update($request->all());
+        $post = Post::where('id', '=', $id)->where('user_id', auth()->user()->id)->first();
+
+        $inputs = $request->toArray();
+        if($inputs['user_id'] != auth()->user()->id){
+            return response()->json(['message'=>'wrong user']);
+        }
+       $post->update($inputs);
         return response()->json([
             'message' => 'post updated!',
             'post' => $post
