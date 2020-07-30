@@ -9,7 +9,7 @@
 
         <p class="subheading font-weight-regular">
           For sharing your posts with others,
-          <br />Please <a href="/login" target="_blank">Register</a> Now!
+          <br />Please <a href="/login">Register</a> Now!
         </p>
       </v-col>
     </v-row>

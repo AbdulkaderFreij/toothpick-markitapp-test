@@ -1,10 +1,13 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link class="navlink" to="/">Home</router-link> 
-      <router-link class="navlink" to="/login">Login</router-link>
-    </div>
-    <router-view/>
+    <v-app>
+      <page-header/>
+      <main>
+        <v-container fluid>
+          <router-view></router-view>
+        </v-container>
+      </main>
+    </v-app>
   </div>
 </template>
 
@@ -17,12 +20,11 @@
   color: #2c3e50;
 }
 
-.navlink{
+.navlink {
   padding: 0px 30px 0px 30px;
 }
 
 #nav {
-
   padding: 30px;
 
   a {
@@ -35,3 +37,13 @@
   }
 }
 </style>
+
+<script>
+import PageHeader from "./components/Header.vue";
+export default {
+  name: "app",
+  components: {
+    PageHeader,
+  },
+};
+</script>
