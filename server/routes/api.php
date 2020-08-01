@@ -30,6 +30,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
 Route::get('/posts', 'PostController@index');
 Route::get('/post/{id}', 'PostController@show');
+Route::get('/posts/{idd}', 'PostController@showById');
 Route::put('/post/{id}', 'PostController@update');
 Route::post('/post', 'PostController@store');
 Route::delete('/post/{id}', 'PostController@destroy');

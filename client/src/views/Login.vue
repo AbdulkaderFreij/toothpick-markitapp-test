@@ -208,7 +208,10 @@ export default {
             this.$store.dispatch("setToken", response.data.access_token);
             this.$store.dispatch("setUser", response.data.user.name);
             localStorage.setItem("token", response.data.access_token);
-            localStorage.setItem('id',response.data.user.id)
+            localStorage.setItem("id", response.data.user.id);
+            localStorage.setItem("user", response.data.user.name);
+            localStorage.setItem('isUserLoggedIn', true)
+
             this.navigateTo({ name: "posts" });
             console.log(response);
           })
@@ -226,10 +229,12 @@ export default {
         .then((response) => {
           this.$store.dispatch("setToken", response.data.access_token);
           this.$store.dispatch("setUser", response.data.user.name);
+          this.$store.dispatch("setUserId", response.data.user.id);
           if (!localStorage.getItem("token")) {
             localStorage.setItem("token", response.data.access_token);
-            localStorage.setItem('id',response.data.user.id)
-
+            localStorage.setItem("id", response.data.user.id);
+            localStorage.setItem("user", response.data.user.name);
+            localStorage.setItem('isUserLoggedIn', true)
           }
           this.navigateTo({ name: "posts" });
 

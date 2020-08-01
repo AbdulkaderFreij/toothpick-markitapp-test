@@ -31,14 +31,19 @@ class PostController extends Controller
         }
         $inputs['user_id'] = auth()->user()->id;
         $post = Post::create($inputs);
-        $response = $post->with('user')->last();
-        return response()->json(['message'=> 'post created',
-        'post' => $response]);
+        $finalPost = Post::where('id', $post->id)->with('user')->get();
+        return response()->json($finalPost);
     }
 
     public function show()
     {
         $post = Post::where('user_id', auth()->user()->id)->get();
+        return $post;
+    }
+
+    public function showById($id)
+    {
+        $post = Post::where('id', $id)->with('user')->get();
         return $post;
     }
 
@@ -64,13 +69,29 @@ class PostController extends Controller
 
     public function destroy(Request $request, $id)
     {
+        try{
         $post = Post::where('id', '=', $id)->where('user_id', auth()->user()->id)->first();
-        $post->delete();
-        $remainPost = Post::where('user_id', auth()->user()->id)->get();
-        return response()->json([
-            'message' => 'post deleted',
-            'remain-Post' => $remainPost
-        ]);
+        if($post!=null){
 
+            $post->delete();
+
+            $remainPost = Post::where('user_id', auth()->user()->id)->get();
+            return response()->json([
+                'message' => 'post deleted',
+                'remain-Post' => $remainPost
+            ]);
+        }
+
+        else{
+
+            return response()->json([
+                "message"=>"wrong user"
+            ]);
+        }
+
+        }
+        catch(Exception $e){
+            abort(500, "error");
+        }
     }
 }

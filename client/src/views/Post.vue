@@ -169,18 +169,29 @@ export default {
     },
 
     deleteItem(item) {
-      let token = localStorage.getItem("token");     
-      confirm("Are you sure you want to delete this post?") &&
-        axios
-          .delete(`http://127.0.0.1:8000/api/post/${item}`, {
-            headers: {
-              Authorization: `Bearer ` + token,
-              "Content-Type": "application/json",
-            },
-          })
-          .then(() => {
-            this.posts.splice(item, 1);
-          });
+      try {
+        let token = localStorage.getItem("token");
+
+        confirm("Are you sure you want to delete this post?") &&
+          axios
+            .delete(`http://127.0.0.1:8000/api/post/${item}`, {
+              headers: {
+                Authorization: `Bearer ` + token,
+                "Content-Type": "application/json",
+              },
+            })
+            .then((response) => {
+              if (response.data.message === "wrong user") {
+                alert("Unauthorizeds");
+                return 0;
+              }
+              let arr = this.posts;
+              const result = arr.filter((post) => post.id !== item);
+              this.posts = result;
+            });
+      } catch (err) {
+        console.log(err);
+      }
     },
 
     close() {
@@ -193,9 +204,34 @@ export default {
 
     save() {
       let token = localStorage.getItem("token");
-
       if (this.editedIndex > -1) {
-        Object.assign(this.posts[this.editedIndex], this.editedItem);
+        if (this.$store.state.userId == this.editedItem.user.id) {
+          Object.assign(this.posts[this.editedIndex], this.editedItem);
+          axios
+            .put(
+              `http://127.0.0.1:8000/api/post/${this.editedItem.id}`,
+              {
+                title: this.editedItem.title,
+                body: this.editedItem.body,
+                user_id: this.editedItem.user_id,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ` + token,
+                  "Content-Type": "application/json",
+                },
+              }
+            )
+            .then((response) => {
+              if (response.data.message == "wrong user") {
+                alert("Unauthorized");
+              }
+            });
+        } else {
+          this.close();
+          alert("Anauthorized User");
+          return 0;
+        }
       } else {
         axios
           .post(
@@ -213,8 +249,7 @@ export default {
             }
           )
           .then((response) => {
-            console.log(response);
-            this.posts.push(response.data.post);
+            this.posts.push(response.data[0]);
           });
       }
       this.close();

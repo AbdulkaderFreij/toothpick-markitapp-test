@@ -61,6 +61,9 @@ export default {
         })
         .then((response) => {
           localStorage.removeItem("token");
+          localStorage.removeItem("id");
+          localStorage.removeItem("user");
+          localStorage.removeItem("isUserLoggedIn");
           this.$store.dispatch("setToken", null);
           this.$store.dispatch("setUser", null);
           alert(response.data[1]);
