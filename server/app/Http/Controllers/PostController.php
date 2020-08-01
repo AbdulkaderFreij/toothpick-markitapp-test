@@ -31,8 +31,9 @@ class PostController extends Controller
         }
         $inputs['user_id'] = auth()->user()->id;
         $post = Post::create($inputs);
+        $response = $post->with('user')->last();
         return response()->json(['message'=> 'post created',
-        'post' => $post]);
+        'post' => $response]);
     }
 
     public function show()

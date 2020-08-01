@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <v-app>
-      <page-header/>
+      <page-header />
       <main>
         <v-container fluid>
           <router-view></router-view>
@@ -11,6 +11,17 @@
   </div>
 </template>
 
+
+<script>
+import PageHeader from "./components/Header.vue";
+export default {
+  name: "app",
+  components: {
+    PageHeader,
+  },
+};
+</script>
+
 <style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -18,6 +29,10 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+.v-application--wrap{
+  min-height:unset !important;
 }
 
 .navlink {
@@ -31,19 +46,10 @@
     font-weight: bold;
     color: #2c3e50;
 
-    &.router-link-exact-active {
+    &.router-view-exact-active {
       color: #42b983;
     }
   }
 }
 </style>
 
-<script>
-import PageHeader from "./components/Header.vue";
-export default {
-  name: "app",
-  components: {
-    PageHeader,
-  },
-};
-</script>

@@ -126,7 +126,6 @@
                             required
                             color="green"
                             :rules="[rules.password]"
-
                           />
                         </v-form>
                       </v-card-text>
@@ -156,19 +155,18 @@
 import axios from "axios";
 
 export default {
-
   data() {
     return {
-    rules: {
-        required: value => !!value || "Required.",
-        password: value => {
+      rules: {
+        required: (value) => !!value || "Required.",
+        password: (value) => {
           const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
           return (
             pattern.test(value) ||
             "Min. 8 characters with at least one capital letter, a number and a special character."
           );
-        }
         },
+      },
       step: 1,
       register: {
         name: "",
@@ -191,36 +189,59 @@ export default {
     };
   },
   methods: {
+    navigateTo(route) {
+      this.$router.push(route);
+    },
     registerUser() {
-    console.log(this.register.password)
-    if (this.register.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/) && this.register.email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)){
-      axios
-        .post("http://127.0.0.1:8000/api/register", this.register)
-        .then((response) => {
-          localStorage.setItem("token", response.data.access_token);
-          console.log(response);
-        })
-        .catch((error) => {
-          if (error.response.status == 500){
-          alert('email or name already exists')
-          }
-        });
-        }
-        else alert("Please check your credentials")
+      console.log(this.register.password);
+      if (
+        this.register.password.match(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/
+        ) &&
+        this.register.email.match(
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        )
+      ) {
+        axios
+          .post("http://127.0.0.1:8000/api/register", this.register)
+          .then((response) => {
+            this.$store.dispatch("setToken", response.data.access_token);
+            this.$store.dispatch("setUser", response.data.user.name);
+            localStorage.setItem("token", response.data.access_token);
+            localStorage.setItem('id',response.data.user.id)
+            this.navigateTo({ name: "posts" });
+            console.log(response);
+          })
+          .catch((error) => {
+            if (error.response.status == 500) {
+              alert("email or name already exists");
+            }
+          });
+      } else alert("Please check your credentials");
     },
 
     loginUser() {
       axios
         .post("http://127.0.0.1:8000/api/login", this.login)
         .then((response) => {
+          this.$store.dispatch("setToken", response.data.access_token);
+          this.$store.dispatch("setUser", response.data.user.name);
           if (!localStorage.getItem("token")) {
             localStorage.setItem("token", response.data.access_token);
+            localStorage.setItem('id',response.data.user.id)
+
           }
+          this.navigateTo({ name: "posts" });
+
           console.log(response);
         })
         .catch((error) => {
-                  if (error.response.status == 404 || error.response.status == 500 ){
-          alert('email or password is wrong')
+          if (error.response.status == 500) {
+            alert("Something wrong happened");
+            return 0;
+          } else if (error.response.status == 404) {
+            alert("Email or Password is incorrect");
+            return 0;
           }
           console.log(error.response);
         });
