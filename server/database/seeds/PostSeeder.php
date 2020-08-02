@@ -14,29 +14,29 @@ class PostSeeder extends Seeder
     {
         DB::table('posts')->insert(array(
             array(
-                'title' => 'Migration and Seeder',
-                'body' => 'Laravel',
+                'title' => 'Laravel',
+                'body' => 'Migration and Seeder',
                 'user_id' => '1',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ),
             array(
-                'title' => 'Adding multiple data in seeder',
-                'body' => 'Laravel',
+                'title' => 'My App',
+                'body' => 'This App Melt Rocks',
                 'user_id' => '1',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ),
             array(
-                'title' => 'Migration and Seeder',
-                'body' => 'Laravel',
+                'title' => 'Web Development',
+                'body' => 'Web development is entertaining and fun',
                 'user_id' => '1',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ),
             array(
-                'title' => 'Adding multiple data in seeder',
-                'body' => 'Laravel',
+                'title' => 'Problems',
+                'body' => 'Some times problems in coding is annoying but finding a solution will make you feel happy',
                 'user_id' => '1',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()

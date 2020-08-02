@@ -4,7 +4,18 @@
     :items="posts"
     :loading="loading"
     :search="search"
+    :items-per-page="10"
+    :sort-desc.sync="sortDesc"
+    :sort-by.sync="sortBy"
+    item-key="items.key"
     class="elevation-3"
+    :footer-props="{
+      showFirstLastPage: true,
+      firstIcon: 'mdi-arrow-collapse-left',
+      lastIcon: 'mdi-arrow-collapse-right',
+      prevIcon: 'mdi-minus',
+      nextIcon: 'mdi-plus',
+    }"
   >
     <template v-slot:item.created_at="{ item }">
       <span>{{ new Date(item.created_at).toLocaleString() }}</span>
@@ -61,10 +72,10 @@
       </v-toolbar>
     </template>
     <template v-slot:item.actions="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)">
+      <v-icon v-if= "$store.state.userId == item.user_id" small class="mr-2" @click="editItem(item)">
         mdi-pencil
       </v-icon>
-      <v-icon small @click="deleteItem(item)">
+      <v-icon v-if= "$store.state.userId == item.user_id" small @click="deleteItem(item)">
         mdi-delete
       </v-icon>
     </template>
@@ -78,6 +89,8 @@ export default {
     search: "",
     dialog: false,
     loading: true,
+    sortBy: "created_at",
+    sortDesc: true,
     headers: [
       {
         text: "Author",

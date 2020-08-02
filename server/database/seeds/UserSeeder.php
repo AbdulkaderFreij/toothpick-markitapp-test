@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Carbon\Carbon;
 
 class UserSeeder extends Seeder
 {
@@ -15,6 +16,8 @@ class UserSeeder extends Seeder
             'name' => "Mike",
             'email' => "mike" . '@gmail.com',
             'password' => Hash::make('password'),
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
         ]);
     }
 }

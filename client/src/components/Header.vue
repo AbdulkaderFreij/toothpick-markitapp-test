@@ -66,6 +66,7 @@ export default {
           localStorage.removeItem("isUserLoggedIn");
           this.$store.dispatch("setToken", null);
           this.$store.dispatch("setUser", null);
+          this.$store.dispatch("setUserId", null);
           alert(response.data[1]);
           console.log(response.data);
           this.navigateTo({ name: "home" });
