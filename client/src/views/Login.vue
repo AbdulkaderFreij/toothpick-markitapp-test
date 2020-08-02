@@ -193,7 +193,6 @@ export default {
       this.$router.push(route);
     },
     registerUser() {
-      console.log(this.register.password);
       if (
         this.register.password.match(
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/
@@ -210,7 +209,7 @@ export default {
             localStorage.setItem("token", response.data.access_token);
             localStorage.setItem("id", response.data.user.id);
             localStorage.setItem("user", response.data.user.name);
-            localStorage.setItem('isUserLoggedIn', true)
+            localStorage.setItem("isUserLoggedIn", true);
 
             this.navigateTo({ name: "posts" });
             console.log(response);
@@ -234,11 +233,9 @@ export default {
             localStorage.setItem("token", response.data.access_token);
             localStorage.setItem("id", response.data.user.id);
             localStorage.setItem("user", response.data.user.name);
-            localStorage.setItem('isUserLoggedIn', true)
+            localStorage.setItem("isUserLoggedIn", true);
           }
           this.navigateTo({ name: "posts" });
-
-          console.log(response);
         })
         .catch((error) => {
           if (error.response.status == 500) {

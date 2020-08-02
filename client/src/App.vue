@@ -11,7 +11,6 @@
   </div>
 </template>
 
-
 <script>
 import PageHeader from "./components/Header.vue";
 export default {
@@ -31,12 +30,16 @@ export default {
   color: #2c3e50;
 }
 
-.v-application--wrap{
-  min-height:unset !important;
+.v-application--wrap {
+  min-height: unset !important;
 }
 
 .navlink {
   padding: 0px 30px 0px 30px;
+}
+
+.v-toolbar__title {
+  overflow: unset;
 }
 
 #nav {
@@ -52,4 +55,3 @@ export default {
   }
 }
 </style>
-

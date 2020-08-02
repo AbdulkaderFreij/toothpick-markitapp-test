@@ -7,9 +7,9 @@ export default new Vuex.Store({
   strict: true,
   state: {
     token: localStorage.getItem("token"),
-    user: localStorage.getItem('user'),
-    userId: localStorage.getItem('id'),
-    isUserLoggedIn: localStorage.getItem('isUserLoggedIn'),
+    user: localStorage.getItem("user"),
+    userId: localStorage.getItem("id"),
+    isUserLoggedIn: localStorage.getItem("isUserLoggedIn"),
   },
 
   mutations: {
@@ -23,8 +23,8 @@ export default new Vuex.Store({
       state.user = user;
     },
     setUserId(state, userId) {
-        state.userId = userId;
-      },
+      state.userId = userId;
+    },
   },
   actions: {
     setToken({ commit }, token) {
@@ -34,7 +34,7 @@ export default new Vuex.Store({
       commit("setUser", user);
     },
     setUserId({ commit }, userId) {
-        commit("setUserId", userId);
-      },
+      commit("setUserId", userId);
+    },
   },
 });

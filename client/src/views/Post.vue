@@ -3,6 +3,7 @@
     :headers="headers"
     :items="posts"
     :loading="loading"
+    :search="search"
     class="elevation-3"
   >
     <template v-slot:item.created_at="{ item }">
@@ -12,13 +13,19 @@
     <template v-slot:top>
       <v-toolbar text color="white">
         <v-toolbar-title>Posts</v-toolbar-title>
+        <v-text-field
+          class="ml-6"
+          v-model="search"
+          append-icon="search"
+          label="Search"
+          single-line
+          hide-details
+        ></v-text-field>
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn color="green" dark class="mb-2" v-bind="attrs" v-on="on"
-              >New Post</v-btn
-            >
+            <v-btn color="green" dark v-bind="attrs" v-on="on">New Post</v-btn>
           </template>
           <v-card>
             <v-card-title>
@@ -57,7 +64,7 @@
       <v-icon small class="mr-2" @click="editItem(item)">
         mdi-pencil
       </v-icon>
-      <v-icon small @click="deleteItem(item.id)">
+      <v-icon small @click="deleteItem(item)">
         mdi-delete
       </v-icon>
     </template>
@@ -68,6 +75,7 @@
 import axios from "axios";
 export default {
   data: () => ({
+    search: "",
     dialog: false,
     loading: true,
     headers: [
@@ -92,7 +100,6 @@ export default {
       {
         text: "Published Date",
         align: "start",
-        sortable: false,
         dataType: "Date",
         value: "created_at",
       },
@@ -163,34 +170,44 @@ export default {
     },
 
     editItem(item) {
-      this.editedIndex = this.posts.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
+      if (this.$store.state.userId == item.user_id) {
+        this.editedIndex = this.posts.indexOf(item);
+        this.editedItem = Object.assign({}, item);
+        this.dialog = true;
+      } else {
+        alert("Unauthorized User");
+        return 0;
+      }
     },
 
     deleteItem(item) {
-      try {
-        let token = localStorage.getItem("token");
+      if (this.$store.state.userId == item.user_id) {
+        try {
+          let token = localStorage.getItem("token");
 
-        confirm("Are you sure you want to delete this post?") &&
-          axios
-            .delete(`http://127.0.0.1:8000/api/post/${item}`, {
-              headers: {
-                Authorization: `Bearer ` + token,
-                "Content-Type": "application/json",
-              },
-            })
-            .then((response) => {
-              if (response.data.message === "wrong user") {
-                alert("Unauthorizeds");
-                return 0;
-              }
-              let arr = this.posts;
-              const result = arr.filter((post) => post.id !== item);
-              this.posts = result;
-            });
-      } catch (err) {
-        console.log(err);
+          confirm("Are you sure you want to delete this post?") &&
+            axios
+              .delete(`http://127.0.0.1:8000/api/post/${item.id}`, {
+                headers: {
+                  Authorization: `Bearer ` + token,
+                  "Content-Type": "application/json",
+                },
+              })
+              .then((response) => {
+                if (response.data.message === "wrong user") {
+                  alert("Unauthorized User");
+                  return 0;
+                }
+                let arr = this.posts;
+                const result = arr.filter((post) => post.id !== item.id);
+                this.posts = result;
+              });
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        alert("Unauthorized User");
+        return 0;
       }
     },
 
@@ -205,7 +222,7 @@ export default {
     save() {
       let token = localStorage.getItem("token");
       if (this.editedIndex > -1) {
-        if (this.$store.state.userId == this.editedItem.user.id) {
+        if (this.$store.state.userId == this.editedItem.user_id) {
           Object.assign(this.posts[this.editedIndex], this.editedItem);
           axios
             .put(
@@ -224,12 +241,12 @@ export default {
             )
             .then((response) => {
               if (response.data.message == "wrong user") {
-                alert("Unauthorized");
+                alert("Unauthorized User");
               }
             });
         } else {
           this.close();
-          alert("Anauthorized User");
+          alert("Unauthorized User");
           return 0;
         }
       } else {

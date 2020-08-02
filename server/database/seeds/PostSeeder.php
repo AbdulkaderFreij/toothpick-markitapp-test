@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Carbon\Carbon;
 
 class PostSeeder extends Seeder
 {
@@ -13,25 +14,33 @@ class PostSeeder extends Seeder
     {
         DB::table('posts')->insert(array(
             array(
-              'title' => 'Migration and Seeder',
-              'body' => 'Laravel',
-              'user_id' => '1'
+                'title' => 'Migration and Seeder',
+                'body' => 'Laravel',
+                'user_id' => '1',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ),
             array(
-              'title' => 'Adding multiple data in seeder',
-              'body' => 'Laravel',
-              'user_id' => '1'
+                'title' => 'Adding multiple data in seeder',
+                'body' => 'Laravel',
+                'user_id' => '1',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
             ),
             array(
                 'title' => 'Migration and Seeder',
                 'body' => 'Laravel',
-                'user_id' => '2'
-              ),
-              array(
+                'user_id' => '1',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ),
+            array(
                 'title' => 'Adding multiple data in seeder',
                 'body' => 'Laravel',
-                'user_id' => '2'
-              ),
-          ));
+                'user_id' => '1',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ),
+        ));
     }
 }
