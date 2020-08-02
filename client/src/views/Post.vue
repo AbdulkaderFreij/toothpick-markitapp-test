@@ -1,5 +1,6 @@
 <template>
   <v-data-table
+    v-if="$store.state.token || $store.state.isUserLoggedIn"
     :headers="headers"
     :items="posts"
     :loading="loading"
@@ -8,7 +9,7 @@
     :sort-desc.sync="sortDesc"
     :sort-by.sync="sortBy"
     item-key="items.key"
-    class="elevation-3"
+    class="elevation-3 row"
     :footer-props="{
       showFirstLastPage: true,
       firstIcon: 'mdi-arrow-collapse-left',
@@ -17,8 +18,24 @@
       nextIcon: 'mdi-plus',
     }"
   >
+    <template v-slot:item.id="{ item }">
+      <v-chip :color="getColor()" @click="navigateTo(item.id)">{{
+        item.id
+      }}</v-chip>
+    </template>
+    <template v-slot:item.user.name="{ item }">
+      <span @click="navigateTo(item.id)">{{ item.user.name }}</span>
+    </template>
+    <template v-slot:item.title="{ item }">
+      <span @click="navigateTo(item.id)">{{ item.title }}</span>
+    </template>
+    <template v-slot:item.body="{ item }">
+      <span @click="navigateTo(item.id)">{{ item.body }}</span>
+    </template>
     <template v-slot:item.created_at="{ item }">
-      <span>{{ new Date(item.created_at).toLocaleString() }}</span>
+      <span @click="navigateTo(item.id)">{{
+        new Date(item.created_at).toLocaleString()
+      }}</span>
     </template>
 
     <template v-slot:top>
@@ -72,15 +89,30 @@
       </v-toolbar>
     </template>
     <template v-slot:item.actions="{ item }">
-      <v-icon v-if= "$store.state.userId == item.user_id" small class="mr-2" @click="editItem(item)">
+      <v-icon
+        v-if="$store.state.userId == item.user_id"
+        small
+        class="mr-2"
+        @click="editItem(item)"
+      >
         mdi-pencil
       </v-icon>
-      <v-icon v-if= "$store.state.userId == item.user_id" small @click="deleteItem(item)">
+      <v-icon
+        v-if="$store.state.userId == item.user_id"
+        small
+        @click="deleteItem(item)"
+      >
         mdi-delete
       </v-icon>
     </template>
   </v-data-table>
 </template>
+
+<style scoped>
+.row {
+  cursor: pointer;
+}
+</style>
 
 <script>
 import axios from "axios";
@@ -92,6 +124,12 @@ export default {
     sortBy: "created_at",
     sortDesc: true,
     headers: [
+      {
+        text: "ID",
+        aligh: "start",
+        sortable: false,
+        value: "id",
+      },
       {
         text: "Author",
         align: "start",
@@ -158,6 +196,17 @@ export default {
   },
 
   methods: {
+    navigateTo(id) {
+      this.$router.push({
+        name: "details",
+        params: {
+          myProperty: id,
+        },
+      });
+    },
+    getColor() {
+      return "red";
+    },
     getData() {
       let token = localStorage.getItem("token");
       if (token) {
