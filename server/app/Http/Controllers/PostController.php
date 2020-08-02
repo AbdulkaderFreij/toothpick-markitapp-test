@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Post;
+use Exception;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -16,7 +17,15 @@ class PostController extends Controller
     {
         try {
             $posts = Post::with('user')->get();
-            return response()->json($posts);
+            if ($posts != null) {
+
+                return response()->json($posts);
+            } else {
+
+                return response()->json([
+                    "message" => "wrong user"
+                ], 401);
+            }
         } catch (Exception $e) {
             abort(500, "error");
         }
